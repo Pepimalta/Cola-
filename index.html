@@ -4,83 +4,648 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f3ec">
+
   <title>Meu Scrapbook — ateliê de memórias</title>
+
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <header class="topbar">
-    <a class="brand" href="./" aria-label="Meu Scrapbook"><span class="brand-icon">✳</span><span>meu scrapbook<small>ATELIÊ DE MEMÓRIAS</small></span></a>
-    <div class="project-heading"><label class="sr-only" for="projectName">Nome do projeto</label><input id="projectName" value="Um dia para guardar" maxlength="80"><span id="saveStatus" role="status">Seu cantinho de criar</span></div>
+    <a class="brand" href="./" aria-label="Meu Scrapbook">
+      <span>
+        meu scrapbook
+        <small>ATELIÊ DE MEMÓRIAS</small>
+      </span>
+    </a>
+
+    <div class="project-heading">
+      <label class="sr-only" for="projectName">
+        Nome do projeto
+      </label>
+
+      <input
+        id="projectName"
+        value="Um dia para guardar"
+        maxlength="80"
+      >
+
+      <span id="saveStatus" role="status">
+        Seu cantinho de criar
+      </span>
+    </div>
+
     <nav class="header-actions" aria-label="Projeto">
-      <button id="newProject" class="button subtle">Novo</button>
-      <button id="openProject" class="button subtle">Abrir</button>
-      <button id="saveProject" class="button secondary">Salvar projeto</button>
-      <button id="exportImage" class="button primary">Baixar imagem ↗</button>
+      <button id="newProject" class="button subtle">
+        Novo
+      </button>
+
+      <button id="openProject" class="button subtle">
+        Abrir
+      </button>
+
+      <button id="saveProject" class="button secondary">
+        Salvar projeto
+      </button>
+
+      <button id="exportImage" class="button primary">
+        Baixar imagem ↗
+      </button>
     </nav>
   </header>
+
   <main class="studio">
     <aside class="materials" aria-label="Materiais">
-      <div class="panel-heading"><span class="eyebrow">TUDO À MÃO</span><h1>Caixa de materiais</h1><p>Um pouco de papel. Um tanto de você.</p></div>
-      <div class="tabs" role="tablist" aria-label="Tipos de materiais">
-        <button class="tab active" id="tab-photos" role="tab" aria-selected="true" aria-controls="panel-photos" data-tab="photos">Fotos</button>
-        <button class="tab" id="tab-papers" role="tab" aria-selected="false" aria-controls="panel-papers" data-tab="papers" tabindex="-1">Papéis</button>
-        <button class="tab" id="tab-stickers" role="tab" aria-selected="false" aria-controls="panel-stickers" data-tab="stickers" tabindex="-1">Adesivos</button>
-        <button class="tab" id="tab-text" role="tab" aria-selected="false" aria-controls="panel-text" data-tab="text" tabindex="-1">Texto</button>
+      <div class="panel-heading">
+        <span class="eyebrow">TUDO À MÃO</span>
+        <h1>Caixa de materiais</h1>
+        <p>Um pouco de papel. Um tanto de você.</p>
       </div>
-      <section id="panel-photos" class="material-panel" role="tabpanel" aria-labelledby="tab-photos">
-        <button id="uploadPhotos" class="upload-zone"><span class="upload-icon">＋</span><strong>Traga suas memórias</strong><span>Escolha fotos do computador</span><small>JPG, PNG ou WebP · até 15 MB por foto</small></button>
-        <div class="section-title"><h2>Suas fotos</h2><span id="photoCount">0 fotos</span></div>
-        <div id="photoLibrary" class="photo-library"><p class="empty-library">As fotos que você escolher aparecem aqui. Clique nelas para colocar na página.</p></div>
-        <div class="tip-card"><span>✧</span><p>Você também pode arrastar fotos do computador direto para a página.</p></div>
+
+      <div
+        class="tabs"
+        role="tablist"
+        aria-label="Tipos de materiais"
+      >
+        <button
+          class="tab active"
+          id="tab-photos"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-photos"
+          data-tab="photos"
+        >
+          Fotos
+        </button>
+
+        <button
+          class="tab"
+          id="tab-papers"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-papers"
+          data-tab="papers"
+          tabindex="-1"
+        >
+          Papéis
+        </button>
+
+        <button
+          class="tab"
+          id="tab-stickers"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-stickers"
+          data-tab="stickers"
+          tabindex="-1"
+        >
+          Adesivos
+        </button>
+
+        <button
+          class="tab"
+          id="tab-text"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-text"
+          data-tab="text"
+          tabindex="-1"
+        >
+          Texto
+        </button>
+      </div>
+
+      <section
+        id="panel-photos"
+        class="material-panel"
+        role="tabpanel"
+        aria-labelledby="tab-photos"
+      >
+        <button id="uploadPhotos" class="upload-zone">
+          <span class="upload-icon">＋</span>
+          <strong>Traga suas memórias</strong>
+          <span>Escolha fotos do computador</span>
+          <small>JPG, PNG ou WebP · até 15 MB por foto</small>
+        </button>
+
+        <div class="section-title">
+          <h2>Suas fotos</h2>
+          <span id="photoCount">0 fotos</span>
+        </div>
+
+        <div id="photoLibrary" class="photo-library">
+          <p class="empty-library">
+            As fotos que você escolher aparecem aqui.
+            Clique nelas para colocar na página.
+          </p>
+        </div>
+
+        <div class="tip-card">
+          <span>✧</span>
+          <p>
+            Você também pode arrastar fotos do computador
+            direto para a página.
+          </p>
+        </div>
       </section>
-      <section id="panel-papers" class="material-panel" role="tabpanel" aria-labelledby="tab-papers" hidden>
-        <div class="section-title"><h2>Fundo da página</h2></div><div id="backgroundPresets" class="swatch-grid"></div>
-        <label class="field inline-field">Outra cor<input id="pageColor" type="color" value="#fffaf0"></label>
-        <label class="field">Textura<select id="pagePattern"><option value="plain">Papel liso</option><option value="dots">Pontinhos</option><option value="grid">Quadriculado</option><option value="lines">Pautado</option></select></label>
-        <div class="section-title"><h2>Recortes de papel</h2><span>Clique para adicionar</span></div><div id="paperPresets" class="paper-grid"></div>
-        <div class="section-title"><h2>Fitas adesivas</h2></div><div id="tapePresets" class="tape-grid"></div>
+
+      <section
+        id="panel-papers"
+        class="material-panel"
+        role="tabpanel"
+        aria-labelledby="tab-papers"
+        hidden
+      >
+        <div class="section-title">
+          <h2>Fundo da página</h2>
+        </div>
+
+        <div id="backgroundPresets" class="swatch-grid"></div>
+
+        <label class="field inline-field">
+          Outra cor
+          <input id="pageColor" type="color" value="#fffaf0">
+        </label>
+
+        <label class="field">
+          Textura
+
+          <select id="pagePattern">
+            <option value="plain">Papel liso</option>
+            <option value="dots">Pontinhos</option>
+            <option value="grid">Quadriculado</option>
+            <option value="lines">Pautado</option>
+          </select>
+        </label>
+
+        <div class="section-title">
+          <h2>Recortes de papel</h2>
+          <span>Clique para adicionar</span>
+        </div>
+
+        <div id="paperPresets" class="paper-grid"></div>
+
+        <div class="section-title">
+          <h2>Fitas adesivas</h2>
+        </div>
+
+        <div id="tapePresets" class="tape-grid"></div>
       </section>
-      <section id="panel-stickers" class="material-panel" role="tabpanel" aria-labelledby="tab-stickers" hidden>
-        <div class="section-title"><h2>Pequenos detalhes</h2></div><p class="panel-description">Escolha um adesivo e encontre um cantinho para ele.</p><div id="stickerPresets" class="sticker-grid"></div>
-        <div class="tip-card"><span>♡</span><p>Misture tamanhos e deixe alguns elementos levemente tortinhos.</p></div>
+
+      <section
+        id="panel-stickers"
+        class="material-panel"
+        role="tabpanel"
+        aria-labelledby="tab-stickers"
+        hidden
+      >
+        <div class="section-title">
+          <h2>Pequenos detalhes</h2>
+        </div>
+
+        <p class="panel-description">
+          Escolha um adesivo e encontre um cantinho para ele.
+        </p>
+
+        <div id="stickerPresets" class="sticker-grid"></div>
+
+        <div class="tip-card">
+          <span>♡</span>
+          <p>
+            Misture tamanhos e deixe alguns elementos
+            levemente tortinhos.
+          </p>
+        </div>
       </section>
-      <section id="panel-text" class="material-panel" role="tabpanel" aria-labelledby="tab-text" hidden>
-        <div class="section-title"><h2>Palavras que ficam</h2></div>
-        <button class="text-preset text-title" data-text="Um dia especial" data-font="Georgia">Um dia especial<small>Adicionar título</small></button>
-        <button class="text-preset text-hand" data-text="que bom que a gente viveu isso ♡" data-font="cursive">uma lembrança boa<small>Adicionar bilhete</small></button>
-        <button class="text-preset text-caption" data-text="Lugar, data e uma história para contar." data-font="Arial">Os detalhes dessa história<small>Adicionar legenda</small></button>
-        <label class="field">Seu texto<textarea id="newText" rows="4" placeholder="O que você quer guardar desse dia?" maxlength="1000"></textarea></label><button id="addText" class="button primary full-width">＋ Colocar na página</button>
+
+      <section
+        id="panel-text"
+        class="material-panel"
+        role="tabpanel"
+        aria-labelledby="tab-text"
+        hidden
+      >
+        <div class="section-title">
+          <h2>Palavras que ficam</h2>
+        </div>
+
+        <button
+          class="text-preset text-title"
+          data-text="Um dia especial"
+          data-font="Georgia"
+        >
+          Um dia especial
+          <small>Adicionar título</small>
+        </button>
+
+        <button
+          class="text-preset text-hand"
+          data-text="que bom que a gente viveu isso ♡"
+          data-font="cursive"
+        >
+          uma lembrança boa
+          <small>Adicionar bilhete</small>
+        </button>
+
+        <button
+          class="text-preset text-caption"
+          data-text="Lugar, data e uma história para contar."
+          data-font="Arial"
+        >
+          Os detalhes dessa história
+          <small>Adicionar legenda</small>
+        </button>
+
+        <button
+          class="text-preset text-title"
+          data-text="MEOVV"
+          data-font="Bodoni Moda"
+        >
+          MEOVV
+          <small>Inspiração para títulos · Bodoni Moda</small>
+        </button>
+
+        <p class="font-note">
+          Essa opção é uma aproximação para criar títulos.
+          Não é a fonte oficial do logotipo MEOVV.
+        </p>
+
+        <div class="font-picker">
+          <h3>Biblioteca de fontes</h3>
+
+          <p id="fontCount" class="font-note"></p>
+
+          <label class="field">
+            Buscar fonte
+
+            <input
+              id="fontSearch"
+              type="search"
+              placeholder="Ex.: Montserrat, Caveat…"
+            >
+          </label>
+
+          <label class="field">
+            Escolher fonte
+            <select id="fontChoice" size="6"></select>
+          </label>
+
+          <p id="fontPreview" class="font-preview">
+            Memórias que ficam
+            <br>
+            Aa Bb Cc · 123 · ação ♡
+          </p>
+
+          <p id="fontLoadStatus" class="font-note" role="status">
+            Selecione uma fonte para ver a prévia.
+          </p>
+
+          <button
+            id="applyFont"
+            class="button secondary full-width"
+          >
+            Aplicar ao texto selecionado
+          </button>
+
+          <label class="field">
+            Outra fonte do Google Fonts
+
+            <input
+              id="customFont"
+              type="text"
+              maxlength="80"
+              placeholder="Nome exato da família"
+            >
+          </label>
+
+          <button
+            id="loadCustomFont"
+            class="button secondary full-width"
+          >
+            Carregar fonte pelo nome
+          </button>
+
+          <p class="font-note">
+            As fontes online precisam de internet.
+            A fonte escolhida na prévia também será usada
+            no seu próximo texto.
+          </p>
+        </div>
+
+        <label class="field">
+          Seu texto
+
+          <textarea
+            id="newText"
+            rows="4"
+            placeholder="O que você quer guardar desse dia?"
+            maxlength="1000"
+          ></textarea>
+        </label>
+
+        <button id="addText" class="button primary full-width">
+          ＋ Colocar na página
+        </button>
       </section>
-      <footer class="materials-footer">FEITO DE PEQUENAS COISAS BONITAS</footer>
+
+      <footer class="materials-footer">
+        FEITO DE PEQUENAS COISAS BONITAS
+      </footer>
     </aside>
+
     <section class="workspace" aria-label="Mesa de criação">
-      <div class="workspace-toolbar"><div class="history-controls"><button id="undo" class="icon-button" title="Desfazer (Ctrl+Z)" aria-label="Desfazer">↶</button><button id="redo" class="icon-button" title="Refazer (Ctrl+Shift+Z)" aria-label="Refazer">↷</button><span class="toolbar-divider"></span><span class="page-label">Sua página <span>·</span> 1000 × 1200</span></div><div class="zoom-controls"><button id="zoomOut" class="icon-button" aria-label="Diminuir zoom">−</button><output id="zoomValue">50%</output><button id="zoomIn" class="icon-button" aria-label="Aumentar zoom">＋</button><button id="fitPage" class="button subtle">Ajustar</button></div></div>
-      <div id="canvasViewport" class="canvas-viewport"><div id="canvasWrap" class="canvas-wrap"><canvas id="canvas" width="1000" height="1200" tabindex="0" aria-label="Página do scrapbook. Selecione elementos pela lista de camadas; use as setas para mover e Delete para excluir."></canvas></div><div id="dropOverlay" class="drop-overlay" hidden>Solte suas fotos aqui ♡</div></div>
-      <div class="workspace-footer"><span id="itemCount">0 elementos</span><span>Arraste para mover · cantos para redimensionar · alça para girar</span></div>
+      <div class="workspace-toolbar">
+        <div class="history-controls">
+          <button
+            id="undo"
+            class="icon-button"
+            title="Desfazer (Ctrl+Z)"
+            aria-label="Desfazer"
+          >
+            ↶
+          </button>
+
+          <button
+            id="redo"
+            class="icon-button"
+            title="Refazer (Ctrl+Shift+Z)"
+            aria-label="Refazer"
+          >
+            ↷
+          </button>
+
+          <span class="toolbar-divider"></span>
+
+          <span class="page-label">
+            Sua página <span>·</span> 1000 × 1200
+          </span>
+        </div>
+
+        <div class="zoom-controls">
+          <button
+            id="zoomOut"
+            class="icon-button"
+            aria-label="Diminuir zoom"
+          >
+            −
+          </button>
+
+          <output id="zoomValue">50%</output>
+
+          <button
+            id="zoomIn"
+            class="icon-button"
+            aria-label="Aumentar zoom"
+          >
+            ＋
+          </button>
+
+          <button id="fitPage" class="button subtle">
+            Ajustar
+          </button>
+        </div>
+      </div>
+
+      <div id="canvasViewport" class="canvas-viewport">
+        <div id="canvasWrap" class="canvas-wrap">
+          <canvas
+            id="canvas"
+            width="1000"
+            height="1200"
+            tabindex="0"
+            aria-label="Página do scrapbook. Selecione elementos pela lista de camadas; use as setas para mover e Delete para excluir."
+          ></canvas>
+        </div>
+
+        <div id="dropOverlay" class="drop-overlay" hidden>
+          Solte suas fotos aqui ♡
+        </div>
+      </div>
+
+      <div class="workspace-footer">
+        <span id="itemCount">0 elementos</span>
+
+        <span>
+          Arraste para mover · cantos para redimensionar ·
+          alça para girar
+        </span>
+      </div>
     </section>
+
     <aside class="inspector" aria-label="Ajustes e camadas">
-      <div class="inspector-heading"><span class="eyebrow">DO SEU JEITO</span><h2>Detalhes</h2></div>
-      <div id="noSelection" class="selection-empty"><span>↖</span><h3>Cada detalhe conta</h3><p>Escolha um elemento da página para ajustar tamanho, cor e posição.</p></div>
+      <div class="inspector-heading">
+        <span class="eyebrow">DO SEU JEITO</span>
+        <h2>Detalhes</h2>
+      </div>
+
+      <div id="noSelection" class="selection-empty">
+        <span>↖</span>
+        <h3>Cada detalhe conta</h3>
+
+        <p>
+          Escolha um elemento da página para ajustar
+          tamanho, cor e posição.
+        </p>
+      </div>
+
       <section id="selectionControls" hidden>
-        <div class="selected-type" id="selectedType">Elemento</div>
-        <div id="textControls" hidden><label class="field">Texto<textarea id="editText" rows="3" maxlength="1000"></textarea></label><label class="field">Fonte<select id="fontFamily"><option value="Georgia">Clássica</option><option value="Arial">Simples</option><option value="cursive">Manuscrita</option><option value="monospace">Máquina de escrever</option></select></label><label class="field">Tamanho da letra<input id="fontSize" type="number" min="12" max="160"></label></div>
-        <label id="colorField" class="field inline-field">Cor<input id="elementColor" type="color"></label>
-        <div class="field-pair"><label class="field">Largura<input id="elementWidth" type="number" min="30" max="2000"></label><label class="field">Altura<input id="elementHeight" type="number" min="30" max="2400"></label></div>
-        <label class="field">Rotação <output id="rotationValue">0°</output><input id="rotation" type="range" min="-180" max="180" step="1"></label>
-        <label class="field">Opacidade <output id="opacityValue">100%</output><input id="opacity" type="range" min="10" max="100" step="1"></label>
-        <label id="frameField" class="field">Moldura da foto<select id="photoFrame"><option value="polaroid">Polaroid</option><option value="white">Borda branca</option><option value="none">Sem moldura</option></select></label>
-        <label class="checkbox-field"><input id="elementShadow" type="checkbox">Sombra suave</label>
-        <div class="arrange-controls"><button id="bringForward" class="button secondary">↑ Subir camada</button><button id="sendBackward" class="button secondary">↓ Descer camada</button></div>
-        <div class="element-actions"><button id="duplicate" class="button secondary">Duplicar</button><button id="delete" class="button danger">Excluir</button></div>
+        <div class="selected-type" id="selectedType">
+          Elemento
+        </div>
+
+        <div id="textControls" hidden>
+          <label class="field">
+            Texto
+
+            <textarea
+              id="editText"
+              rows="3"
+              maxlength="1000"
+            ></textarea>
+          </label>
+
+          <label class="field">
+            Fonte
+
+            <select id="fontFamily">
+              <option value="Georgia">Clássica</option>
+              <option value="Arial">Simples</option>
+              <option value="cursive">Manuscrita</option>
+              <option value="monospace">
+                Máquina de escrever
+              </option>
+            </select>
+          </label>
+
+          <label class="field">
+            Tamanho da letra
+
+            <input
+              id="fontSize"
+              type="number"
+              min="12"
+              max="160"
+            >
+          </label>
+        </div>
+
+        <label id="colorField" class="field inline-field">
+          Cor
+          <input id="elementColor" type="color">
+        </label>
+
+        <div class="field-pair">
+          <label class="field">
+            Largura
+
+            <input
+              id="elementWidth"
+              type="number"
+              min="30"
+              max="2000"
+            >
+          </label>
+
+          <label class="field">
+            Altura
+
+            <input
+              id="elementHeight"
+              type="number"
+              min="30"
+              max="2400"
+            >
+          </label>
+        </div>
+
+        <label class="field">
+          Rotação
+          <output id="rotationValue">0°</output>
+
+          <input
+            id="rotation"
+            type="range"
+            min="-180"
+            max="180"
+            step="1"
+          >
+        </label>
+
+        <label class="field">
+          Opacidade
+          <output id="opacityValue">100%</output>
+
+          <input
+            id="opacity"
+            type="range"
+            min="10"
+            max="100"
+            step="1"
+          >
+        </label>
+
+        <label id="frameField" class="field">
+          Moldura da foto
+
+          <select id="photoFrame">
+            <option value="polaroid">Polaroid</option>
+            <option value="white">Borda branca</option>
+            <option value="none">Sem moldura</option>
+          </select>
+        </label>
+
+        <label class="checkbox-field">
+          <input id="elementShadow" type="checkbox">
+          Sombra suave
+        </label>
+
+        <div class="arrange-controls">
+          <button id="bringForward" class="button secondary">
+            ↑ Subir camada
+          </button>
+
+          <button id="sendBackward" class="button secondary">
+            ↓ Descer camada
+          </button>
+        </div>
+
+        <div class="element-actions">
+          <button id="duplicate" class="button secondary">
+            Duplicar
+          </button>
+
+          <button id="delete" class="button danger">
+            Excluir
+          </button>
+        </div>
       </section>
-      <section class="layers-section"><div class="section-title"><h2>Camadas</h2><span>De cima para baixo</span></div><div id="layers" class="layers-list"></div></section>
-      <div class="keyboard-tip"><strong>Atalhos da mesa</strong><p>Ctrl + Z · desfazer<br>Ctrl + D · duplicar seleção<br>Delete · excluir seleção<br>Setas · mover seleção</p></div>
+
+      <section class="layers-section">
+        <div class="section-title">
+          <h2>Camadas</h2>
+          <span>De cima para baixo</span>
+        </div>
+
+        <div id="layers" class="layers-list"></div>
+      </section>
+
+      <div class="keyboard-tip">
+        <strong>Atalhos da mesa</strong>
+
+        <p>
+          Ctrl + Z · desfazer
+          <br>
+          Ctrl + D · duplicar seleção
+          <br>
+          Delete · excluir seleção
+          <br>
+          Setas · mover seleção
+        </p>
+      </div>
     </aside>
   </main>
-  <input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
-  <input id="projectInput" type="file" accept=".json,application/json" hidden>
+
+  <input
+    id="photoInput"
+    type="file"
+    accept="image/png,image/jpeg,image/webp"
+    multiple
+    hidden
+  >
+
+  <input
+    id="projectInput"
+    type="file"
+    accept=".json,application/json"
+    hidden
+  >
+
   <div id="toast" class="toast" role="status" hidden></div>
-  <dialog id="confirmDialog"><form method="dialog"><span class="eyebrow">COMEÇAR DE NOVO</span><h2>Uma página em branco?</h2><p>Salve o projeto atual antes de começar outro, se quiser continuar depois.</p><div class="dialog-actions"><button value="cancel" class="button secondary">Continuar aqui</button><button value="confirm" class="button primary">Criar nova página</button></div></form></dialog>
+
+  <dialog id="confirmDialog">
+    <form method="dialog">
+      <span class="eyebrow">COMEÇAR DE NOVO</span>
+
+      <h2>Uma página em branco?</h2>
+
+      <p>
+        Salve o projeto atual antes de começar outro,
+        se quiser continuar depois.
+      </p>
+
+      <div class="dialog-actions">
+        <button value="cancel" class="button secondary">
+          Continuar aqui
+        </button>
+
+        <button value="confirm" class="button primary">
+          Criar nova página
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/fonts.js" defer></script>
   <script src="js/app.js" defer></script>
 </body>
 </html>
