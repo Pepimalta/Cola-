@@ -11,7 +11,9 @@
   const MAX_PHOTOS = 40;
   const HISTORY_LIMIT = 60;
   const TYPES = ['photo', 'paper', 'tape', 'text', 'sticker'];
-  const FONTS = ['Georgia', 'Arial', 'cursive', 'monospace'];
+  const fontLibrary = window.ScrapbookFonts;
+  let newTextFont = 'Georgia';
+  let fontRequest = 0;
   const PATTERNS = ['plain', 'dots', 'grid', 'lines'];
   const COLORS = ['#fffaf0', '#e6ecd9', '#ecd4ca', '#dbe5ed', '#f5e5b9', '#d9cbb8', '#e4dcf0', '#f9f7f0', '#c8d6bc', '#dfbcb3'];
   const PAPERS = [
@@ -281,7 +283,7 @@
   }
 
   function drawText(context, item, x, y) {
-    context.font = `${item.fontSize}px ${item.font}`;
+    context.font = `${item.fontSize}px ${fontLibrary.css(item.font)}`;
     context.fillStyle = item.color;
     context.textBaseline = 'top';
     context.textAlign = 'left';
@@ -476,7 +478,21 @@
   }
 
   bindProperty('editText', 'text');
-  bindProperty('fontFamily', 'font');
+  $('fontFamily').addEventListener('change', async event => {
+    const item = selected();
+    if (!item) return;
+    const name = event.target.value;
+    const request = ++fontRequest;
+    try {
+      await fontLibrary.ensure(name);
+      if (request !== fontRequest || !project.items.includes(item)) return;
+      item.font = name;
+      commit();
+    } catch (error) {
+      toast(error.message);
+      event.target.value = item.font;
+    }
+  });
   bindProperty('fontSize', 'fontSize', value => clamp(Number(value), 12, 160));
   bindProperty('elementColor', 'color');
   bindProperty('elementWidth', 'w', value => clamp(Number(value), 30, 2000));
@@ -568,6 +584,77 @@
     });
   });
 
+  function updateFontSelects() {
+    for (const id of ['fontFamily', 'fontChoice']) {
+      const select = $(id);
+      const previous = select.value;
+      const query = id === 'fontChoice' ? $('fontSearch').value.trim().toLowerCase() : '';
+      select.replaceChildren();
+      fontLibrary.families.filter(name => name.toLowerCase().includes(query)).forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.append(option);
+      });
+      if ([...select.options].some(option => option.value === previous)) select.value = previous;
+    }
+    $('fontCount').textContent = `${fontLibrary.families.length} fontes · adicione outras pelo nome`;
+  }
+
+  function setupFontPicker() {
+    updateFontSelects();
+    $('fontSearch').addEventListener('input', updateFontSelects);
+    let previewRequest = 0;
+    async function preview(name) {
+      const request = ++previewRequest;
+      $('fontLoadStatus').textContent = `Carregando ${name}…`;
+      try {
+        await fontLibrary.ensure(name);
+        if (request !== previewRequest) return;
+        newTextFont = name;
+        $('fontPreview').style.fontFamily = fontLibrary.css(name);
+        $('fontLoadStatus').textContent = `Fonte pronta: ${name}`;
+      } catch (error) {
+        if (request === previewRequest) $('fontLoadStatus').textContent = error.message;
+      }
+    }
+    $('fontChoice').addEventListener('change', event => preview(event.target.value));
+    $('applyFont').addEventListener('click', async () => {
+      const item = selected();
+      if (!item || item.type !== 'text') return toast('Selecione um texto da página para aplicar a fonte.');
+      const name = $('fontChoice').value;
+      if (!name) return toast('Escolha uma fonte na lista.');
+      const request = ++fontRequest;
+      try {
+        await fontLibrary.ensure(name);
+        if (request !== fontRequest || !project.items.includes(item)) return;
+        item.font = name;
+        commit();
+        toast(`Fonte ${name} aplicada.`);
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+    $('loadCustomFont').addEventListener('click', async () => {
+      const name = $('customFont').value.trim();
+      if (!fontLibrary.valid(name)) return toast('Digite o nome da família como aparece no Google Fonts.');
+      $('loadCustomFont').disabled = true;
+      try {
+        await fontLibrary.ensure(name);
+        fontLibrary.remember(name);
+        $('fontSearch').value = '';
+        updateFontSelects();
+        $('fontChoice').value = name;
+        await preview(name);
+        toast(`Fonte ${name} disponível para usar.`);
+      } catch (error) {
+        toast(error.message);
+      } finally {
+        $('loadCustomFont').disabled = false;
+      }
+    });
+  }
+
   function buildMaterials() {
     COLORS.forEach(color => {
       const button = document.createElement('button');
@@ -608,12 +695,17 @@
     });
   }
 
-  function addText(text, font = 'Georgia') {
+  async function addText(text, font = newTextFont) {
     if (!text.trim()) {
       toast('Escreva um texto para colocar na página.');
       return;
     }
-    addItem(makeItem('text', { text, font, fontSize: 42, color: '#46533d', w: 510, h: 230, shadow: false }));
+    try {
+      await fontLibrary.ensure(font);
+      addItem(makeItem('text', { text, font, fontSize: 42, color: '#46533d', w: 510, h: 230, shadow: false }));
+    } catch (error) {
+      toast(error.message);
+    }
   }
 
   document.querySelectorAll('[data-text]').forEach(button => {
@@ -759,7 +851,13 @@
   }
 
   $('saveProject').addEventListener('click', saveProjectFile);
-  $('exportImage').addEventListener('click', () => {
+  $('exportImage').addEventListener('click', async () => {
+    try {
+      await Promise.all(project.items.filter(item => item.type === 'text').map(item => fontLibrary.ensure(item.font)));
+    } catch (error) {
+      toast(error.message + ' A exportação foi interrompida para preservar a fonte escolhida.');
+      return;
+    }
     const output = document.createElement('canvas');
     output.width = WIDTH;
     output.height = HEIGHT;
@@ -794,7 +892,7 @@
       if (typeof item.shadow !== 'boolean') invalid();
       if (item.name !== undefined && (typeof item.name !== 'string' || item.name.length > 120)) invalid();
       if (['text', 'sticker'].includes(item.type) && (typeof item.text !== 'string' || item.text.length > 1000)) invalid();
-      if (item.type === 'text' && (!FONTS.includes(item.font) || !Number.isFinite(item.fontSize) || item.fontSize < 12 || item.fontSize > 160)) invalid();
+      if (item.type === 'text' && (!fontLibrary.valid(item.font) || !Number.isFinite(item.fontSize) || item.fontSize < 12 || item.fontSize > 160)) invalid();
       if (item.type === 'photo' && (!data.library.includes(item.assetId) || !['polaroid', 'white', 'none'].includes(item.frame))) invalid();
     }
     if (new Set(data.library).size !== data.library.length) invalid();
@@ -811,6 +909,13 @@
     validateProject(data);
     const loaded = new Map();
     for (const id of data.library) loaded.set(id, await loadImage(data.assets[id].source));
+    const names = [...new Set(data.items.filter(item => item.type === 'text').map(item => item.font))];
+    names.forEach(name => fontLibrary.remember(name));
+    updateFontSelects();
+    const fontResults = await Promise.allSettled(names.map(name => fontLibrary.ensure(name)));
+    if (fontResults.some(result => result.status === 'rejected')) {
+      toast('Algumas fontes não carregaram. Conecte-se à internet e reabra o projeto para exibi-las corretamente.');
+    }
     assets.clear();
     imageCache.clear();
     library.length = 0;
@@ -1006,6 +1111,7 @@
   async function initialize() {
     setBusy(true);
     buildMaterials();
+    setupFontPicker();
     starterPage();
     resetHistory();
     fitPage();
