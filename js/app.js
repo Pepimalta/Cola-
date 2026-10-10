@@ -185,11 +185,13 @@
     context.restore();
   }
 
-  function draw(context = ctx, selection = true) {
+  function draw(context = ctx, selection = true, transparent = false) {
     context.clearRect(0, 0, WIDTH, HEIGHT);
-    context.fillStyle = project.background;
-    context.fillRect(0, 0, WIDTH, HEIGHT);
-    drawPattern(context, project.pattern, 0, 0, WIDTH, HEIGHT);
+    if (!transparent) {
+      context.fillStyle = project.background;
+      context.fillRect(0, 0, WIDTH, HEIGHT);
+      drawPattern(context, project.pattern, 0, 0, WIDTH, HEIGHT);
+    }
     for (const item of project.items) drawItem(context, item);
     if (selection && selected()) drawSelection(context, selected());
   }
@@ -861,11 +863,11 @@
     const output = document.createElement('canvas');
     output.width = WIDTH;
     output.height = HEIGHT;
-    draw(output.getContext('2d'), false);
+    draw(output.getContext('2d'), false, true);
     output.toBlob(blob => {
       if (!blob) return toast('Não foi possível exportar a imagem.');
       downloadBlob(blob, `${filename()}.png`);
-      toast('Sua página está pronta em PNG, com 1000 × 1200 pixels.');
+      toast('PNG com fundo transparente pronto, com 1000 × 1200 pixels.');
     }, 'image/png');
   });
 
