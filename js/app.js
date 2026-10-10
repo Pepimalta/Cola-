@@ -232,9 +232,11 @@
   function drawPhoto(context, item, x, y) {
     const border = item.frame === 'none' ? 0 : Math.min(item.w, item.h) * .045;
     const bottom = item.frame === 'polaroid' ? item.h * .17 : border;
-    context.fillStyle = '#fffef9';
-    context.fillRect(x, y, item.w, item.h);
-    context.shadowColor = 'transparent';
+    if (item.frame !== 'none') {
+      context.fillStyle = '#fffef9';
+      context.fillRect(x, y, item.w, item.h);
+      context.shadowColor = 'transparent';
+    }
     const image = imageCache.get(item.assetId);
     if (!image) return;
     const w = item.w - border * 2;
@@ -747,7 +749,7 @@
         buffer.width = Math.max(1, Math.round(original.width * scale));
         buffer.height = Math.max(1, Math.round(original.height * scale));
         buffer.getContext('2d').drawImage(original, 0, 0, buffer.width, buffer.height);
-        const source = buffer.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', .88);
+        const source = buffer.toDataURL(file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png', .88);
         const assetId = uid();
         assets.set(assetId, { source, name: file.name.slice(0, 120) });
         imageCache.set(assetId, await loadImage(source));
@@ -766,16 +768,31 @@
   function addPhoto(assetId) {
     const image = imageCache.get(assetId);
     if (!image) return;
+    const transparent = hasTransparency(image);
     const w = 340;
-    const h = clamp(w * image.height / image.width + 60, 190, 550);
+    const h = clamp(w * image.height / image.width + (transparent ? 0 : 60), 30, 2000);
     addItem(makeItem('photo', {
       assetId,
       name: assets.get(assetId).name,
       w,
       h,
-      frame: 'polaroid',
+      frame: transparent ? 'none' : 'polaroid',
+      shadow: !transparent,
       rotation: project.items.length % 2 ? -5 : 5
     }));
+  }
+
+  function hasTransparency(image) {
+    const buffer = document.createElement('canvas');
+    buffer.width = image.width;
+    buffer.height = image.height;
+    const context = buffer.getContext('2d', { willReadFrequently: true });
+    context.drawImage(image, 0, 0);
+    const pixels = context.getImageData(0, 0, buffer.width, buffer.height).data;
+    for (let index = 3; index < pixels.length; index += 4) {
+      if (pixels[index] < 255) return true;
+    }
+    return false;
   }
 
   function renderLibrary() {
@@ -863,11 +880,11 @@
     const output = document.createElement('canvas');
     output.width = WIDTH;
     output.height = HEIGHT;
-    draw(output.getContext('2d'), false, true);
+    draw(output.getContext('2d'), false);
     output.toBlob(blob => {
       if (!blob) return toast('Não foi possível exportar a imagem.');
       downloadBlob(blob, `${filename()}.png`);
-      toast('PNG com fundo transparente pronto, com 1000 × 1200 pixels.');
+      toast('Sua página está pronta em PNG, com 1000 × 1200 pixels.');
     }, 'image/png');
   });
 
